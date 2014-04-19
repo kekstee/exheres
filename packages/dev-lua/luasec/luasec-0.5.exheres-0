@@ -1,0 +1,40 @@
+# Copyright 2014 Alexander Scheuermann <alex+exherbo@tnix.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require lua flag-o-matic
+
+SUMMARY="OpenSSL library binding to provide TLS/SSL communication"
+HOMEPAGE="https://github.com/brunoos/luasec"
+
+DOWNLOADS="https://github.com/brunoos/luasec/archive/${PNV}.zip"
+
+LICENCES="MIT"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build+run:
+        dev-lang/lua[>=5.1]
+        dev-lua/luasocket
+        dev-libs/openssl
+"
+
+WORK=${WORKBASE}/${PN}-${PN}-${PV}
+
+src_prepare() {
+    lua_version
+    append-flags -I /usr/include/lua${LUAVER}
+
+    edo sed -i \
+        -e "s;/lib;/${LIBDIR};"\
+        Makefile
+        
+    edo cd src
+    edo lua options.lua -g /usr/include/openssl/ssl.h > options.h
+}
+
+src_compile() {
+    emake "${DEFAULT_SRC_COMPILE_PARAMS[@]}" linux
+}
+

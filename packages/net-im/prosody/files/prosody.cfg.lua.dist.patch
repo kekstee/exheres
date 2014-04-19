@@ -1,0 +1,36 @@
+diff -u old/prosody.cfg.lua.dist new/prosody.cfg.lua.dist
+--- old/prosody.cfg.lua.dist	2014-04-19 11:33:30.944390558 +0200
++++ new/prosody.cfg.lua.dist	2014-04-19 14:31:09.173241861 +0200
+@@ -63,7 +63,7 @@
+ 		--"http_files"; -- Serve static files from a directory over HTTP
+ 
+ 	-- Other specific functionality
+-		--"posix"; -- POSIX functionality, sends server to background, enables syslog, etc.
++		"posix"; -- POSIX functionality, sends server to background, enables syslog, etc.
+ 		--"groups"; -- Shared roster support
+ 		--"announce"; -- Send announcement to all online users
+ 		--"welcome"; -- Welcome users who register accounts
+@@ -139,12 +139,19 @@
+ -- Logging configuration
+ -- For advanced logging see http://prosody.im/doc/logging
+ log = {
+-	info = "prosody.log"; -- Change 'info' to 'debug' for verbose logging
+-	error = "prosody.err";
+-	-- "*syslog"; -- Uncomment this for logging to syslog
++	-- info = "prosody.log"; -- Change 'info' to 'debug' for verbose logging
++	-- error = "prosody.err";
++	"*syslog"; -- Uncomment this for logging to syslog
+ 	-- "*console"; -- Log to the console, useful for debugging with daemonize=false
+ }
+ 
++-- mod_posix configuration
++-- Provide daemon settings required by the systemd service file.
++run_as_root = false
++daemonize = true
++pidfile = "/var/run/prosody/prosody.pid"
++umask = "027"
++
+ ----------- Virtual hosts -----------
+ -- You need to add a VirtualHost entry for each domain you wish Prosody to serve.
+ -- Settings under each VirtualHost entry apply *only* to that host.
+Only in new/: prosody.cfg.lua.dist.patch

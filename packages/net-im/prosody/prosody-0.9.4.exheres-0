@@ -1,0 +1,92 @@
+# Copyright 2014 Alexander Scheuermann <alex+exherbo@tnix.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require systemd-service [ systemd_files=[ prosody.service ] ] lua
+
+SUMMARY="A lua based Jabber/XMPP server"
+HOMEPAGE="https://prosody.im"
+UPSTREAM_DOCUMENTATION="
+    ${HOMEPAGE}/doc/configure/ [[ lang = en description = [ Configuration ] ]]
+"
+
+DOWNLOADS="https://prosody.im/downloads/source/${PNV}.tar.gz"
+
+LICENCES="MIT"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS="
+    icu [[ description = [ internationalized domain names through icu instead of libidn ] ]]
+"
+
+DEPENDENCIES="
+    build+run:
+        user/prosody
+        group/prosody
+        dev-lang/lua[~>5.1.0]
+        dev-libs/openssl
+        icu? ( dev-libs/icu )
+        !icu? ( net-dns/libidn )
+    run:
+        dev-lua/luaexpat[>=1.2.0]
+        dev-lua/luafilesystem[~>1.0]
+        dev-lua/luasocket[~>2.0.0]
+    recommendation:
+        dev-lua/luasec[>=0.4.3] [[ description = [ SSL/TLS support  ] ]]
+    suggestion:
+        dev-lua/luadbi[>=0.5] [[ description = [ SQL database support (SQLite3, MySQL, PostgreSQL)  ] ]]
+        dev-lua/lua-zlib [[ description = [ Compressing XMPP streams when mod_compression is enabled  ] ]]
+        dev-lua/luaevent[>=0.4.3] [[ description = [ Efficiently scaling above hundreds of concurrent connections  ] ]]
+"
+
+src_prepare() {
+    if option systemd; then
+        expatch ${FILES}/prosody.cfg.lua.dist.patch
+    fi
+
+    default
+}
+
+src_configure() {
+    local args=(
+        --ostype=linux
+        --prefix=/usr
+        --sysconfdir=/etc/prosody
+        --datadir=/var/lib/prosody
+        --c-compiler=${CC}
+        --linker=${CC}
+        --lua-suffix=
+        --with-lua=/usr
+        --runwith=lua
+        --with-lua-include=/usr/include/lua5.1
+        --with-lua-lib=/usr/${LIBDIR}
+        --with-ssl=crypto
+        --require-config
+        --no-example-certs
+    )
+    if option icu; then
+        args+=(
+            --idn-library=icu
+        )
+    else
+        args+=(
+            --idn-library=idn
+        )
+    fi
+    edo ./configure ${args[@]}
+    
+    edo sed -i \
+        -e "s;/lib;/${LIBDIR};"\
+        -e "s;-fPIC -Wall;-fPIC -Wall ${CFLAGS};"\
+        -e "s;-shared;-shared ${LDFLAGS};"\
+        Makefile
+}
+
+src_install() {
+    default
+
+    install_systemd_files 
+    
+    keepdir /var/lib/prosody
+    edo chown prosody:prosody "${IMAGE}"/var/lib/prosody
+}
+

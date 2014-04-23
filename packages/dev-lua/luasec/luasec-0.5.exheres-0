@@ -29,7 +29,7 @@ src_prepare() {
     edo sed -i \
         -e "s;/lib;/${LIBDIR};"\
         Makefile
-        
+
     edo cd src
     edo lua options.lua -g /usr/include/openssl/ssl.h > options.h
 }

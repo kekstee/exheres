@@ -73,7 +73,7 @@ src_configure() {
         )
     fi
     edo ./configure ${args[@]}
-    
+
     edo sed -i \
         -e "s;/lib;/${LIBDIR};"\
         -e "s;-fPIC -Wall;-fPIC -Wall ${CFLAGS};"\
@@ -84,8 +84,8 @@ src_configure() {
 src_install() {
     default
 
-    install_systemd_files 
-    
+    install_systemd_files
+
     keepdir /var/lib/prosody
     edo chown prosody:prosody "${IMAGE}"/var/lib/prosody
 }

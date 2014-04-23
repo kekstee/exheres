@@ -1,3 +1,3 @@
-# kekstees exherbo repository
+# kekstee's exherbo repository
 
-A third party repository for the [exherbo](http://exherbo.org) Linux distribution.
+A third-party repository for the [exherbo](http://exherbo.org) Linux distribution.

@@ -1,0 +1,27 @@
+# Copyright 2014 Alexander Scheuermann <alex+exherbo@tnix.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require xfont
+
+SUMMARY="Comic Neue and Comic Neue Angular by Craig Rozynski"
+HOMEPAGE="http://comicneue.com/"
+
+LICENCES="public-domain"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DOWNLOADS="http://comicneue.com/comic-neue-${PV}.zip"
+
+DEPENDENCIES="
+    build:
+        app-arch/unzip
+"
+
+WORK="${WORKBASE}/comic-neue-${PV}"
+
+src_install() {
+    insinto "${ROOT}/usr/share/fonts/X11/${FONT}/"
+    doins "${WORK}"/*.ttf
+}
+

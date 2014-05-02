@@ -33,14 +33,14 @@ DEPENDENCIES="
     recommendation:
         dev-lua/luasec[>=0.4.3] [[ description = [ SSL/TLS support  ] ]]
     suggestion:
-        dev-lua/luadbi[>=0.5] [[ description = [ SQL database support (SQLite3, MySQL, PostgreSQL)  ] ]]
-        dev-lua/lua-zlib [[ description = [ Compressing XMPP streams when mod_compression is enabled  ] ]]
-        dev-lua/luaevent[>=0.4.3] [[ description = [ Efficiently scaling above hundreds of concurrent connections  ] ]]
+        dev-lua/luadbi[>=0.5] [[ description = [ SQL database support (SQLite3, MySQL, PostgreSQL) ] ]]
+        dev-lua/luaevent[>=0.4.3] [[ description = [ Efficiently scaling above hundreds of concurrent connections ] ]]
+        dev-lua/lua-zlib [[ description = [ Compressing XMPP streams when mod_compression is enabled ] ]]
 "
 
 src_prepare() {
     if option systemd; then
-        expatch ${FILES}/prosody.cfg.lua.dist.patch
+        expatch "${FILES}"/prosody.cfg.lua.dist.patch
     fi
 
     default
@@ -72,7 +72,7 @@ src_configure() {
             --idn-library=idn
         )
     fi
-    edo ./configure ${args[@]}
+    edo ./configure "${args[@]}"
 
     edo sed -i \
         -e "s;/lib;/${LIBDIR};"\

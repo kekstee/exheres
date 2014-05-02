@@ -1,12 +1,10 @@
 # Copyright 2014 Alexander Scheuermann <alex+exherbo@tnix.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require lua flag-o-matic
+require github [ user=brunoos tag=${PNV} ] lua flag-o-matic
 
 SUMMARY="OpenSSL library binding to provide TLS/SSL communication"
 HOMEPAGE="https://github.com/brunoos/luasec"
-
-DOWNLOADS="https://github.com/brunoos/luasec/archive/${PNV}.zip"
 
 LICENCES="MIT"
 SLOT="0"
@@ -16,8 +14,8 @@ MYOPTIONS=""
 DEPENDENCIES="
     build+run:
         dev-lang/lua[>=5.1]
-        dev-lua/luasocket
         dev-libs/openssl
+        dev-lua/luasocket
 "
 
 WORK=${WORKBASE}/${PN}-${PN}-${PV}

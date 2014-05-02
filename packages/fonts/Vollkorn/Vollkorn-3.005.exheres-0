@@ -23,7 +23,7 @@ src_unpack() {
 }
 
 src_install() {
-    insinto "${ROOT}/usr/share/fonts/X11/${FONT}/"
+    insinto "/usr/share/fonts/X11/${FONT}/"
     doins "${WORK}"/TTF/*.ttf
     doins "${WORK}"/PS-OTF/*.otf
 

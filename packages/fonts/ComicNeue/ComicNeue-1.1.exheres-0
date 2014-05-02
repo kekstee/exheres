@@ -21,7 +21,7 @@ DEPENDENCIES="
 WORK="${WORKBASE}/comic-neue-${PV}"
 
 src_install() {
-    insinto "${ROOT}/usr/share/fonts/X11/${FONT}/"
+    insinto "/usr/share/fonts/X11/${FONT}/"
     doins "${WORK}"/*.ttf
 }
 

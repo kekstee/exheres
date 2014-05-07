@@ -1,0 +1,66 @@
+# Copyright 2014 Alexander Scheuermannn <alex+exherbo@tnix.de>
+# Distributed under the terms of the GNU General Public License v2
+
+SUMMARY="cblocks, cmines and csokoban"
+DESCRIPTION="
+The programs in this distribution are re-implementations of games for the Linux console.
+"
+
+HOMEPAGE="http://www.muppetlabs.com/~breadbox/software/cgames.html"
+DOWNLOADS="http://www.muppetlabs.com/~breadbox/pub/software/cgames-2.2a.tar.gz"
+
+LICENCES="GPL-2"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS="
+    gpm
+    ncurses
+"
+
+DEPENDENCIES="
+    build+run:
+        gpm? ( sys-libs/gpm )
+        ncurses? ( sys-libs/ncurses )
+"
+
+src_configure() {
+    local args=(
+        --prefix=/usr
+        $(option_with ncurses)
+    )
+    if optionq gpm; then
+        args+=( --enable-mouse )
+    else
+        args+=( --disable-mouse )
+    fi
+
+    edo ./configure "${args[@]}"
+
+    edo sed -i \
+        -e 's;${exec_prefix}/games;${exec_prefix}/bin;' \
+        -e 's;${prefix}/share;${prefix}/share/cgames;' \
+        cblocks/Makefile
+    edo sed -i \
+        -e 's;${exec_prefix}/games;${exec_prefix}/bin;' \
+        cmines/Makefile
+    edo sed -i \
+        -e 's;${exec_prefix}/games;${exec_prefix}/bin;' \
+        -e 's;${prefix}/share;${prefix}/share/cgames;' \
+        csokoban/Makefile
+}
+
+src_install() {
+    dobin cblocks/cblocks
+    doman cblocks/cblocks.6
+    insinto /usr/share/cgames/cblocks
+    doins cblocks/series/*
+
+    dobin cmines/cmines
+    doman cmines/cmines.6
+
+    dobin csokoban/csokoban
+    doman csokoban/csokoban.6
+    insinto /usr/share/cgames/csokoban
+    doins csokoban/series/*
+}
+

@@ -8,17 +8,15 @@ HOMEPAGE="http://comicneue.com/"
 
 LICENCES="public-domain"
 SLOT="0"
-PLATFORMS="~amd64 ~x86"
+PLATFORMS="~amd64"
 MYOPTIONS=""
 
-DOWNLOADS="http://comicneue.com/comic-neue-${PV}.zip"
+DOWNLOADS="http://comicneue.com/${PNV}.zip"
 
 DEPENDENCIES="
     build:
         app-arch/unzip
 "
-
-WORK="${WORKBASE}/comic-neue-${PV}"
 
 src_install() {
     insinto "/usr/share/fonts/X11/${FONT}/"

@@ -52,8 +52,8 @@ src_configure() {
         --prefix=/usr
         --sysconfdir=/etc/prosody
         --datadir=/var/lib/prosody
-        --c-compiler=${CC}
-        --linker=${CC}
+        --c-compiler="${CC}"
+        --linker="${CC}"
         --lua-suffix=
         --with-lua=/usr
         --runwith=lua

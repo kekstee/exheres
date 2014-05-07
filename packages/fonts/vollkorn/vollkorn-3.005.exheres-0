@@ -8,19 +8,17 @@ HOMEPAGE="http://vollkorn-typeface.com/"
 
 LICENCES="OFL-1.1"
 SLOT="0"
-PLATFORMS="~amd64 ~x86"
+PLATFORMS="~amd64"
 MYOPTIONS=""
 
-DOWNLOADS="http://vollkorn-typeface.com/download/${PN,,}-$(ever replace 1 -).zip"
+DOWNLOADS="http://vollkorn-typeface.com/download/${PN}-$(ever replace 1 -).zip"
 
 DEPENDENCIES="
     build:
         app-arch/unzip
 "
 
-src_unpack() {
-    [[ -n "${ARCHIVES}" ]] && unzip "${FETCHEDDIR}/${ARCHIVES}" -d "${PNV}"
-}
+WORK=${WORKBASE}
 
 src_install() {
     insinto "/usr/share/fonts/X11/${FONT}/"

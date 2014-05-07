@@ -18,7 +18,9 @@ DEPENDENCIES="
         dev-lua/luasocket
 "
 
-WORK=${WORKBASE}/${PN}-${PN}-${PV}
+WORK=${WORKBASE}/${PN}-${PNV}
+
+DEFAULT_SRC_COMPILE_PARAMS=( linux )
 
 src_prepare() {
     lua_version
@@ -30,9 +32,5 @@ src_prepare() {
 
     edo cd src
     edo lua options.lua -g /usr/include/openssl/ssl.h > options.h
-}
-
-src_compile() {
-    emake "${DEFAULT_SRC_COMPILE_PARAMS[@]}" linux
 }
 

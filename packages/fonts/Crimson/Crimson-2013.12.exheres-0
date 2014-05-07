@@ -1,17 +1,14 @@
 # Copyright 2014 Alexander Scheuermann <alex+exherbo@tnix.de>
 # Distributed under the terms of the GNU General Public License v2
 
-SCM_REPOSITORY="https://github.com/skosch/Crimson.git"
-SCM_TAG="webfonts-december2013"
-
-require scm-git xfont
+require github [ user=skosch tag="webfonts-december2013" ] xfont
 
 SUMMARY="Old Style font family by Sebastian Kosch"
 HOMEPAGE="http://aldusleaf.org/0-crimson.html"
 
 LICENCES="OFL-1.1"
 SLOT="0"
-PLATFORMS="~amd64 ~x86"
+PLATFORMS="~amd64"
 MYOPTIONS=""
 
 DEPENDENCIES=""

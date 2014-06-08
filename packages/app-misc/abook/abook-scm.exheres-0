@@ -1,0 +1,26 @@
+# Copyright 2014 Alexander Scheuermann <alex+exherbo@tnix.de>
+# Distributed under the terms of the GNU General Public License v2
+
+SCM_REPOSITORY="http://git.code.sf.net/p/abook/git"
+SCM_CHECKOUT_TO="abook"
+
+require scm-git autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
+
+SUMMARY="Text-based addressbook program designed to use with mutt mail client"
+HOMEPAGE="http://abook.sourceforge.net/"
+
+LICENCES="GPL-2"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build+run:
+        sys-libs/ncurses
+        sys-libs/readline
+    suggestion:
+        mail-client/mutt
+"
+
+DEFAULT_SRC_CONFIGURE_PARAMS=( --prefix=/usr )
+

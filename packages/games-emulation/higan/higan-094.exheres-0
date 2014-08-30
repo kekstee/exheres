@@ -1,0 +1,164 @@
+# Copyright 2014 Alexander Scheuermann <alex+exherbo@tnix.de>
+# Distributed under the terms of the GNU General Public License v2
+
+MY_PNV="${PN}_v${PV}-source"
+
+SUMMARY="Nintendo multi-system emulator, formerly called bsnes"
+DESCRIPTION="Cycle accurate Super Nintendo emulator. It also supports Nintendo, Game Boy, Game Boy
+Color and Game Boy Advance. OpenGL 3.2 is required.
+"
+HOMEPAGE="http://byuu.org/higan/"
+DOWNLOADS="http://byuu.org/files/${MY_PNV}.tar.xz"
+
+LICENCES="GPL-3"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS="
+    opengl
+    sdl
+    xv
+    (
+        alsa
+        ao
+        openal
+        oss
+        pulseaudio
+    ) [[
+        number-selected = at-least-one
+    ]]
+    (
+        gtk
+        qt4
+    ) [[
+        number-selected = exactly-one
+    ]]
+    (
+        profile_accuracy
+        profile_balanced
+        profile_performance
+    ) [[
+        number-selected = at-least-one
+    ]]
+    profile_accuracy [[ description = [ Allow mid scanline hacks, slow ] ]]
+    profile_balanced [[ description = [ Recommended, conforms to SNES standard ] ]]
+    profile_performance [[ description = [ For weaker hardware ] ]]
+"
+
+DEPENDENCIES="
+    build:
+        dev-util/pkg-config
+    build+run:
+        x11-libs/libX11
+        x11-libs/libXext
+        alsa? ( sys-sound/alsa-lib )
+        ao? ( media-libs/libao )
+        openal? ( media-libs/openal )
+        opengl? ( x11-dri/mesa[X] )
+        pulseaudio? ( media-sound/pulseaudio )
+        sdl? ( media-libs/SDL )
+        oss? ( sys-sound/oss )
+        xv? ( x11-libs/libXv )
+        gtk? ( x11-libs/gtk+:2 )
+        qt4? ( x11-libs/qt:4 )
+"
+
+WORK="${WORKBASE}/${MY_PNV}"
+
+RESTRICT=test
+
+higan_disable() {
+    edo sed -i \
+        -e "s/${1}//" \
+        "${WORK}/target-ethos/Makefile"
+}
+
+# support multiple profiles
+higan_profiles=( accuracy balanced performance )
+
+src_prepare() {
+    # use system flags
+    edo sed -i \
+        -e "/flags   += -I. -O3 -fomit-frame-pointer/ s/-O3 -fomit-frame-pointer/${CXXFLAGS}/" \
+        -e "/  flags += -march=native/d" \
+        -e "/link    +=/ s/$/ ${LDFLAGS}/" \
+        Makefile
+    edo sed -i \
+        -e "/flags := \$(flags) -O3 -fomit-frame-pointer -I../ s/-O3 -fomit-frame-pointer/${CXXFLAGS}/" \
+        ananke/Makefile
+
+    # apply options
+    # audio
+    optionq alsa || higan_disable audio.alsa
+    optionq ao || higan_disable audio.ao
+    optionq openal || higan_disable audio.openal
+    optionq oss || higan_disable audio.oss
+    optionq pulseaudio || {
+        higan_disable audio.pulseaudio
+        higan_disable audio.pulseaudiosimple
+    }
+    # video
+    optionq opengl || higan_disable video.glx
+    optionq sdl || higan_disable video.sdl
+    optionq xv || higan_disable video.xv
+    # input
+    optionq sdl || higan_disable input.sdl
+}
+
+src_compile() {
+    # support multiple profiles
+    for profile in ${higan_profiles[@]}; do
+        if optionq profile_${profile}; then
+            emake clean
+            emake \
+                platform="linux" \
+                compiler="${CXX}" \
+                cflags="-x c -std=c99" \
+                cppflags="-x c++ -std=c++11" \
+                profile="${profile}" \
+                phoenix="$(option qt4 qt gtk)"
+            edo mv out/higan out/higan-${profile}
+        fi
+    done
+
+    # rom loader library
+    edo cd ananke
+    emake \
+        platform="linux" \
+        compiler="${CXX}" \
+        cppflags="-x c++ -std=c++11"
+}
+
+src_install() {
+    dobin out/higan-*
+
+    insinto /usr/share/pixmaps
+    doins data/higan.png
+
+    insinto /usr/share/applications
+    # support multiple profiles
+    for profile in ${higan_profiles[@]}; do
+        if optionq profile_${profile}; then
+            edo cp data/higan.desktop data/higan-${profile}.desktop
+            edo sed -i \
+                -e "s/Name=higan/Name=higan-${profile}/" \
+                -e "s/Exec=higan/Exec=higan-${profile}/" \
+                data/higan-${profile}.desktop
+            doins data/higan-${profile}.desktop
+        fi
+    done
+
+    insinto /usr/share/higan
+    doins -r profile/*
+    doins data/cheats.bml
+
+    # rom loader library
+    dolib.so ananke/libananke.so
+    dosym /usr/${LIBDIR}/libananke.so /usr/${LIBDIR}/libananke.so.1
+
+    # opengl shaders
+    if optionq opengl; then
+        insinto /usr/share/higan/Video\ Shaders
+        doins -r shaders/*.shader
+    fi
+}
+

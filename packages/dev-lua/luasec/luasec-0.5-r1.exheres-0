@@ -13,7 +13,7 @@ MYOPTIONS=""
 
 DEPENDENCIES="
     build+run:
-        dev-lang/lua[>=5.1]
+        dev-lang/lua:=[>=5.1]
         dev-libs/openssl
         dev-lua/luasocket
 "

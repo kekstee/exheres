@@ -7,8 +7,11 @@ SUMMARY="Nintendo multi-system emulator, formerly called bsnes"
 DESCRIPTION="Cycle accurate Super Nintendo emulator. It also supports Nintendo, Game Boy, Game Boy
 Color and Game Boy Advance. OpenGL 3.2 is required.
 "
-HOMEPAGE="http://byuu.org/higan/"
-DOWNLOADS="http://byuu.org/files/${MY_PNV}.tar.xz"
+HOMEPAGE="http://byuu.org/higan/ http://byuu.net/higan"
+DOWNLOADS="
+    http://byuu.org/files/${MY_PNV}.tar.xz
+    http://byuu.net/files/${MY_PNV}.tar.xz
+"
 
 LICENCES="GPL-3"
 SLOT="0"

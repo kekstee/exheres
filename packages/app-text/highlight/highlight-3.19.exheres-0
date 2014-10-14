@@ -1,0 +1,57 @@
+# Copyright 2014 Alexander Scheuermann <alex+exherbo@tnix.de>
+# Distributed under the terms of the GNU General Public License v2
+
+SUMMARY="designed to offer a flexible but easy to use syntax highlighter for several output formats"
+DESCRIPTION="
+Highlight converts sourcecode to HTML, XHTML, RTF, LaTeX, TeX, SVG, BBCode and terminal escape sequences with coloured syntax highlighting. Language definitions and colour themes are customizable.
+"
+HOMEPAGE="http://www.andre-simon.de/doku/${PN}/en/${PN}.php"
+DOWNLOADS="http://www.andre-simon.de/zip/${PNV}.tar.bz2"
+
+LICENCES="GPL-3"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS="doc qt4"
+
+DEPENDENCIES="
+    build+run:
+        dev-libs/boost
+        dev-lang/lua:5.1
+        dev-util/pkg-config
+        doc? ( app-doc/doxygen )
+        qt4? ( x11-libs/qt:4 )
+"
+
+src_prepare() {
+    default
+
+    edo sed \
+        -e '/^CXX=/d' \
+        -e 's/CFLAGS:=-Wall -O2 ${CFLAGS} -DNDEBUG/CFLAGS:=-Wall ${CFLAGS}/' \
+        -e 's/-DUSE_LUA52//' \
+        -e 's/^LDFLAGS =/LDFLAGS +=/' \
+        -i src/makefile
+    edo sed \
+        -e 's/LIBS += -llua/LIBS += -llua5.1/' \
+        -i src/gui-qt/highlight.pro
+}
+
+src_compile() {
+    emake help
+    emake cli
+    if optionq qt4; then
+        emake gui
+    fi
+}
+
+src_install() {
+    default
+
+    if optionq qt4; then
+        emake -j1 DESTDIR="${IMAGE}" install-gui
+    fi
+    if optionq doc; then
+        emake -j1 DESTDIR="${IMAGE}" apidocs
+    fi
+}
+

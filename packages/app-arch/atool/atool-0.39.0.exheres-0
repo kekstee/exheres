@@ -1,0 +1,40 @@
+# Copyright 2014 Alexander Scheuermann <alex+exherbo@tnix.de>
+# Distributed under the terms of the GNU General Public License v2
+
+SUMMARY="atool is a script for managing file archives of various types (tar, tar+gzip, zip etc)."
+HOMEPAGE="http://nongnu.org/${PN}/"
+DOWNLOADS="http://savannah.nongnu.org/download/${PN}/${PNV}.tar.gz"
+
+LICENCES="GPL-2"
+SLOT="0"
+PLATFORMS="~amd64"
+
+DEPENDENCIES="
+    build+run:
+        dev-lang/perl
+    recommendation:
+        sys-apps/file
+    suggestion:
+        app-arch/arc
+        app-arch/arj
+        app-arch/bzip
+        app-arch/bzip2
+        app-arch/cpio
+        app-arch/gzip
+        app-arch/lzip
+        app-arch/lzop
+        app-arch/lha
+        app-arch/p7zip
+        app-arch/pbzip2
+        app-arch/plzip
+        app-arch/rar
+        app-arch/rpm
+        app-arch/tar
+        app-arch/unace
+        app-arch/unalz
+        app-arch/unrar
+        app-arch/unzip
+        app-arch/xz
+        app-arch/zip
+"
+

@@ -1,7 +1,9 @@
 # Copyright 2014 Alexander Scheuermann <alex+exherbo@tnix.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require systemd-service [ systemd_files=[ prosody.service ] ] lua
+require \
+    systemd-service [ systemd_files=[ prosody.service ] ] \
+    lua [ multibuild=false whitelist="5.1" ]
 
 SUMMARY="A lua based Jabber/XMPP server"
 HOMEPAGE="https://prosody.im"
@@ -22,20 +24,19 @@ DEPENDENCIES="
     build+run:
         user/prosody
         group/prosody
-        dev-lang/lua:=[~>5.1.0]
         dev-libs/openssl
         icu? ( dev-libs/icu )
         !icu? ( net-dns/libidn )
     run:
-        dev-lua/luaexpat[>=1.2.0]
-        dev-lua/luafilesystem[~>1.0]
-        dev-lua/luasocket[~>2.0.0]
+        dev-lua/luaexpat[>=1.2.0][lua_abis:*(-)?]
+        dev-lua/luafilesystem[~>1.0][lua_abis:*(-)?]
+        dev-lua/luasocket[~>2.0.0][lua_abis:*(-)?]
     recommendation:
-        dev-lua/luasec[>=0.4.3] [[ description = [ SSL/TLS support  ] ]]
+        dev-lua/luasec[>=0.4.3][lua_abis:*(-)?] [[ description = [ SSL/TLS support  ] ]]
     suggestion:
-        dev-lua/luadbi[>=0.5] [[ description = [ SQL database support (SQLite3, MySQL, PostgreSQL) ] ]]
-        dev-lua/luaevent[>=0.4.3] [[ description = [ Efficiently scaling above hundreds of concurrent connections ] ]]
-        dev-lua/lua-zlib [[ description = [ Compressing XMPP streams when mod_compression is enabled ] ]]
+        dev-lua/luadbi[>=0.5][lua_abis:*(-)?] [[ description = [ SQL database support (SQLite3, MySQL, PostgreSQL) ] ]]
+        dev-lua/luaevent[>=0.4.3][lua_abis:*(-)?] [[ description = [ Efficiently scaling above hundreds of concurrent connections ] ]]
+        dev-lua/lua-zlib[lua_abis:*(-)?] [[ description = [ Compressing XMPP streams when mod_compression is enabled ] ]]
 "
 
 src_prepare() {
@@ -57,7 +58,7 @@ src_configure() {
         --lua-suffix=
         --with-lua=/usr
         --runwith=lua
-        --with-lua-include=/usr/include/lua5.1
+        --with-lua-include=/usr/include/lua$(lua_get_abi)
         --with-lua-lib=/usr/${LIBDIR}
         --with-ssl=crypto
         --require-config

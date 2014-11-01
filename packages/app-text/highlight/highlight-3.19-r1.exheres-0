@@ -1,6 +1,8 @@
 # Copyright 2014 Alexander Scheuermann <alex+exherbo@tnix.de>
 # Distributed under the terms of the GNU General Public License v2
 
+require lua [ multibuild=false whitelist="5.1 5.2" ]
+
 SUMMARY="designed to offer a flexible but easy to use syntax highlighter for several output formats"
 DESCRIPTION="
 Highlight converts sourcecode to HTML, XHTML, RTF, LaTeX, TeX, SVG, BBCode and terminal escape sequences with coloured syntax highlighting. Language definitions and colour themes are customizable.
@@ -16,7 +18,6 @@ MYOPTIONS="doc qt4"
 DEPENDENCIES="
     build+run:
         dev-libs/boost
-        dev-lang/lua:5.1
         dev-util/pkg-config
         doc? ( app-doc/doxygen )
         qt4? ( x11-libs/qt:4 )
@@ -28,11 +29,14 @@ src_prepare() {
     edo sed \
         -e '/^CXX=/d' \
         -e 's/CFLAGS:=-Wall -O2 ${CFLAGS} -DNDEBUG/CFLAGS:=-Wall ${CFLAGS}/' \
-        -e 's/-DUSE_LUA52//' \
         -e 's/^LDFLAGS =/LDFLAGS +=/' \
         -i src/makefile
+    if [[ "$(lua_get_abi)" != "5.2" ]]; then
+        edo sed -e 's/-DUSE_LUA52//' -i src/makefile
+    fi
+
     edo sed \
-        -e 's/LIBS += -llua/LIBS += -llua5.1/' \
+        -e "s/LIBS += -llua/LIBS += -llua$(lua_get_abi)/" \
         -i src/gui-qt/highlight.pro
 }
 

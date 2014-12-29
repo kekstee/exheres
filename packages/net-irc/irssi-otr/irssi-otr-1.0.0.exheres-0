@@ -1,0 +1,23 @@
+# Copyright 2014 Alexander Scheuermann <alex+exherbo@tnix.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require \
+    autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ] \
+    github [ user=cryptodotis tag=v${PV} ]
+
+SUMMARY="LibOTR (http://www.cypherpunks.ca/otr/) support for IRSSI."
+
+LICENCES="GPL-2"
+SLOT="0"
+PLATFORMS="~amd64"
+
+DEPENDENCIES="
+    build+run:
+        dev-libs/libgcrypt[>=1.5.0]
+        dev-libs/libgpg-error
+        net-irc/irssi[>=0.8.15]
+        net-libs/libotr[>4.0.0]
+"
+
+DEFAULT_SRC_INSTALL_PARAMS=( IRSSI_MODULE_DIR=/usr/${LIBDIR}/irssi/modules )
+

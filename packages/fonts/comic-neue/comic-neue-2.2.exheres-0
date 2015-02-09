@@ -1,4 +1,4 @@
-# Copyright 2014 Alexander Scheuermann <alex+exherbo@tnix.de>
+# Copyright 2014-2015 Alexander Scheuermann <alex+exherbo@tnix.de>
 # Distributed under the terms of the GNU General Public License v2
 
 require xfont
@@ -20,6 +20,6 @@ DEPENDENCIES="
 
 src_install() {
     insinto "/usr/share/fonts/X11/${FONT}/"
-    doins "${WORK}"/*.ttf
+    doins "${WORK}"/OTF/*otf
 }
 

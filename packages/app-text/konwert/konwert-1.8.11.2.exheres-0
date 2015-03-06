@@ -1,0 +1,53 @@
+# Copyright 2014 Alexander Scheuermann <alex+exherbo@tnix.de>
+# Distributed under the terms of the GNU General Public License v2
+
+SUMMARY="Charset conversion for files or terminal I/O"
+DESCRIPTION="
+\`konwert' is yet another charset converter
+\`filterm' applies filter conversion to a terminal's I/O, to get on-the-fly charset conversion, and customized input methods.
+"
+
+MY_PV="$(ever replace 2 - ${PV})"
+MY_UPSTREAM_PV="$(ever range 1-2 ${PV})"
+
+HOMEPAGE="https://packages.debian.org/source/sid/${PN}"
+DOWNLOADS="
+http://ftp.de.debian.org/debian/pool/main/k/${PN}/${PN}_${MY_UPSTREAM_PV}.orig.tar.gz
+http://ftp.de.debian.org/debian/pool/main/k/${PN}/${PN}_${MY_PV}.diff.gz
+"
+
+LICENCES="GPL-2"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build+run:
+        dev-lang/perl
+"
+
+WORK="${WORKBASE}/${PN}-${MY_UPSTREAM_PV}"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FETCHEDDIR}/${PN}_${MY_PV}.diff.gz"
+)
+DEFAULT_SRC_COMPILE_PARAMS=(
+    prefix=/usr
+)
+DEFAULT_SRC_INSTALL_PARAMS=(
+    prefix="${IMAGE}usr"
+)
+
+src_prepare() {
+    default
+    sed -i \
+        -e 's;-m755 -s;-m755;' \
+        -e "s;/lib;/${LIBDIR};" \
+        Makefile
+}
+
+src_install() {
+    default
+    keepdir "/usr/${LIBDIR}/konwert/devel"
+}
+

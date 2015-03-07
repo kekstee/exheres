@@ -1,7 +1,7 @@
 # Copyright 2014 Alexander Scheuermann <alex+exherbo@tnix.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require lua [ multibuild=false whitelist="5.1 5.2" ]
+require lua [ multibuild=false whitelist="5.1 5.2 5.3" ]
 
 SUMMARY="designed to offer a flexible but easy to use syntax highlighter for several output formats"
 DESCRIPTION="
@@ -31,9 +31,6 @@ src_prepare() {
         -e 's/CFLAGS:=-Wall -O2 ${CFLAGS} -DNDEBUG/CFLAGS:=-Wall ${CFLAGS}/' \
         -e 's/^LDFLAGS =/LDFLAGS +=/' \
         -i src/makefile
-    if [[ "$(lua_get_abi)" != "5.2" ]]; then
-        edo sed -e 's/-DUSE_LUA52//' -i src/makefile
-    fi
 
     edo sed \
         -e "s/LIBS += -llua/LIBS += -llua$(lua_get_abi)/" \

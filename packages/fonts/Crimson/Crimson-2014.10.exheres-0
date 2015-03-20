@@ -1,10 +1,10 @@
-# Copyright 2014 Alexander Scheuermann <alex+exherbo@tnix.de>
+# Copyright 2014-2015 Alexander Scheuermann <alex+exherbo@tnix.de>
 # Distributed under the terms of the GNU General Public License v2
 
-require github [ user=skosch tag="webfonts-december2013" ] xfont
+require github [ user=skosch tag="fonts-october2014" ] xfont
 
 SUMMARY="Old Style font family by Sebastian Kosch"
-HOMEPAGE="http://aldusleaf.org/0-crimson.html"
+HOMEPAGE="http://aldusleaf.org/crimson.html"
 
 LICENCES="OFL-1.1"
 SLOT="0"
@@ -15,6 +15,6 @@ DEPENDENCIES=""
 
 src_install() {
     insinto "/usr/share/fonts/X11/${FONT}/"
-    doins "${WORK}"/otf/*.otf
+    doins "${WORK}/Desktop Fonts/OTF/"*.otf
 }
 

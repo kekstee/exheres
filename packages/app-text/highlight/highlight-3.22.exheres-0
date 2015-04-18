@@ -28,14 +28,20 @@ src_prepare() {
 
     edo sed \
         -e '/^CXX=/d' \
+        -e '/^AR=/d' \
         -e 's/CFLAGS:=-Wall -O2 ${CFLAGS} -DNDEBUG/CFLAGS:=-Wall ${CFLAGS}/' \
         -e 's/^LDFLAGS =/LDFLAGS +=/' \
+        -e 's/pkg-config/${PKG_CONFIG}/' \
         -i src/makefile
 
     edo sed \
         -e "s/LIBS += -llua/LIBS += -llua$(lua_get_abi)/" \
         -i src/gui-qt/highlight.pro
 }
+
+DEFAULT_SRC_INSTALL_PARAMS=(
+    bin_dir=/usr/$(exhost --target)/bin
+    )
 
 src_compile() {
     emake help
@@ -49,10 +55,10 @@ src_install() {
     default
 
     if optionq qt4; then
-        emake -j1 DESTDIR="${IMAGE}" install-gui
+        emake -j1 DESTDIR="${IMAGE}" ${DEFAULT_SRC_INSTALL_PARAMS[@]} install-gui
     fi
     if optionq doc; then
-        emake -j1 DESTDIR="${IMAGE}" apidocs
+        emake -j1 DESTDIR="${IMAGE}" ${DEFAULT_SRC_INSTALL_PARAMS[@]} apidocs
     fi
 }
 

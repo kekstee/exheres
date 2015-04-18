@@ -32,22 +32,23 @@ DEFAULT_SRC_PREPARE_PATCHES=(
     "${FETCHEDDIR}/${PN}_${MY_PV}.diff.gz"
 )
 DEFAULT_SRC_COMPILE_PARAMS=(
-    prefix=/usr
+    prefix="/usr/$(exhost --target)"
+    sharedir=/usr/share
 )
 DEFAULT_SRC_INSTALL_PARAMS=(
-    prefix="${IMAGE}usr"
+    prefix="${IMAGE}usr/$(exhost --target)"
+    sharedir=${IMAGE}usr/share
 )
 
 src_prepare() {
     default
     sed -i \
         -e 's;-m755 -s;-m755;' \
-        -e "s;/lib;/${LIBDIR};" \
         Makefile
 }
 
 src_install() {
     default
-    keepdir "/usr/${LIBDIR}/konwert/devel"
+    keepdir "/usr/$(exhost --target)/lib/konwert/devel"
 }
 

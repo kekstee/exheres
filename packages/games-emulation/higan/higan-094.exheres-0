@@ -85,6 +85,10 @@ src_prepare() {
     edo sed -i \
         -e "/flags := \$(flags) -O3 -fomit-frame-pointer -I../ s/-O3 -fomit-frame-pointer/${CXXFLAGS}/" \
         ananke/Makefile
+    # set pkg-config
+    edo sed -i \
+        -e "s/pkg-config/${PKG_CONFIG}/" \
+        phoenix/Makefile
 
     # apply options
     # audio
@@ -153,7 +157,7 @@ src_install() {
 
     # rom loader library
     dolib.so ananke/libananke.so
-    dosym /usr/${LIBDIR}/libananke.so /usr/${LIBDIR}/libananke.so.1
+    dosym /usr/$(exhost --target)/lib/libananke.so /usr/$(exhost --target)/lib/libananke.so.1
 
     # opengl shaders
     if optionq opengl; then

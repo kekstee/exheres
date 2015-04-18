@@ -19,5 +19,5 @@ DEPENDENCIES="
         net-libs/libotr[>4.0.0]
 "
 
-DEFAULT_SRC_INSTALL_PARAMS=( IRSSI_MODULE_DIR=/usr/${LIBDIR}/irssi/modules )
+DEFAULT_SRC_INSTALL_PARAMS=( IRSSI_MODULE_DIR=/usr/$(exhost --target)/lib/irssi/modules )
 

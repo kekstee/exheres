@@ -8,7 +8,7 @@ DESCRIPTION="Cycle accurate Super Nintendo emulator. It also supports Nintendo, 
 Color and Game Boy Advance. OpenGL 3.2 is required.
 "
 HOMEPAGE="http://byuu.org/emulation/${PN}/"
-DOWNLOADS="http://byuu.org/download/${MY_PNV}.tar.xz"
+DOWNLOADS="http://files.byuu.org/download/${MY_PNV}.tar.xz"
 
 LICENCES="GPL-3"
 SLOT="0"

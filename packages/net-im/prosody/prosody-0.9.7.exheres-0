@@ -24,9 +24,9 @@ DEPENDENCIES="
     build+run:
         user/prosody
         group/prosody
-        dev-libs/openssl
         icu? ( dev-libs/icu )
         !icu? ( net-dns/libidn )
+        virtual/libssl
     run:
         dev-lua/luaexpat[>=1.2.0][lua_abis:*(-)?]
         dev-lua/luafilesystem[~>1.0][lua_abis:*(-)?]

@@ -50,7 +50,8 @@ src_prepare() {
 src_configure() {
     local args=(
         --ostype=linux
-        --prefix=/usr
+        --prefix=/usr/$(exhost --target)/
+        --libdir=/usr/$(exhost --target)/lib
         --sysconfdir=/etc/prosody
         --datadir=/var/lib/prosody
         --c-compiler="${CC}"
@@ -58,8 +59,8 @@ src_configure() {
         --lua-suffix=
         --with-lua=/usr
         --runwith=lua
-        --with-lua-include=/usr/include/lua$(lua_get_abi)
-        --with-lua-lib=/usr/${LIBDIR}
+        --with-lua-include=/usr/$(exhost --target)/include/lua$(lua_get_abi)
+        --with-lua-lib=/usr/$(exhost --target)/lib
         --with-ssl=crypto
         --require-config
         --no-example-certs
@@ -76,7 +77,6 @@ src_configure() {
     edo ./configure "${args[@]}"
 
     edo sed -i \
-        -e "s;/lib;/${LIBDIR};"\
         -e "s;-fPIC -Wall;-fPIC -Wall ${CFLAGS};"\
         -e "s;-shared;-shared ${LDFLAGS};"\
         Makefile

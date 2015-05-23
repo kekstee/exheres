@@ -16,15 +16,18 @@ MYOPTIONS=""
 
 DEPENDENCIES="
     build+run:
-        dev-libs/openssl
         dev-lua/luasocket[lua_abis:*(-)?]
+        virtual/libssl
 "
+
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/libressl-compat.patch )
 
 DEFAULT_SRC_COMPILE_PARAMS=(
     linux
     )
 
 prepare_one_multibuild() {
+    default
     append-flags -I /usr/include/lua$(lua_get_abi)
 
     edo sed -i \

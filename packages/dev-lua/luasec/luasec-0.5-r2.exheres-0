@@ -20,7 +20,10 @@ DEPENDENCIES="
         virtual/libssl
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/libressl-compat.patch )
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/libressl-compat.patch
+    "${FILES}"/0001-Do-not-hardcode-ar.patch
+)
 
 DEFAULT_SRC_COMPILE_PARAMS=(
     linux

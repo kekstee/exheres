@@ -1,0 +1,38 @@
+Upstream: https://github.com/brunoos/luasec/pull/46
+Reason: Multiarch fix
+
+From 580d9b7ed893b9d10aac3cebfb72e5b7e10b023a Mon Sep 17 00:00:00 2001
+From: Niels Ole Salscheider <niels_ole@salscheider-online.de>
+Date: Sat, 23 May 2015 19:51:58 +0200
+Subject: [PATCH] Do not hardcode ar
+
+On Exherbo, ar is prefixed by the target triple.
+---
+ src/luasocket/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/luasocket/Makefile b/src/luasocket/Makefile
+index 5d845d4..b700fb6 100644
+--- a/src/luasocket/Makefile
++++ b/src/luasocket/Makefile
+@@ -6,7 +6,7 @@ OBJS= \
+ 
+ CC	?= cc
+ CFLAGS	+= $(MYCFLAGS) -DLUASOCKET_DEBUG
+-AR	:= ar rcu
++AR	?= ar
+ RANLIB	?= ranlib
+ 
+ .PHONY: all clean
+@@ -14,7 +14,7 @@ RANLIB	?= ranlib
+ all: libluasocket.a
+ 
+ libluasocket.a: $(OBJS)
+-	$(AR) $@ $(OBJS)
++	$(AR) rcu $@ $(OBJS)
+ 	$(RANLIB) $@
+ 
+ clean:
+-- 
+2.4.1
+

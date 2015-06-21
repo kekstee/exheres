@@ -40,9 +40,7 @@ DEPENDENCIES="
 "
 
 src_prepare() {
-    if option systemd; then
-        expatch "${FILES}"/prosody.cfg.lua.dist.patch
-    fi
+    expatch "${FILES}"/prosody.cfg.lua.dist.patch
 
     default
 }

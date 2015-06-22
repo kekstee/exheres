@@ -18,6 +18,7 @@ SLOT="0"
 PLATFORMS="~amd64"
 MYOPTIONS="
     icu [[ description = [ internationalized domain names through icu instead of libidn ] ]]
+    ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
 "
 
 DEPENDENCIES="
@@ -26,7 +27,8 @@ DEPENDENCIES="
         group/prosody
         icu? ( dev-libs/icu )
         !icu? ( net-dns/libidn )
-        virtual/libssl
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:openssl? ( dev-libs/openssl )
     run:
         dev-lua/luaexpat[>=1.2.0][lua_abis:*(-)?]
         dev-lua/luafilesystem[~>1.0][lua_abis:*(-)?]

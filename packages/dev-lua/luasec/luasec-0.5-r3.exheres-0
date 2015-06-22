@@ -12,12 +12,13 @@ HOMEPAGE="https://github.com/brunoos/luasec"
 LICENCES="MIT"
 SLOT="0"
 PLATFORMS="~amd64"
-MYOPTIONS=""
+MYOPTIONS="( providers: libressl openssl ) [[ number-selected = exactly-one ]]"
 
 DEPENDENCIES="
     build+run:
         dev-lua/luasocket[lua_abis:*(-)?]
-        virtual/libssl
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:openssl? ( dev-libs/openssl )
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(

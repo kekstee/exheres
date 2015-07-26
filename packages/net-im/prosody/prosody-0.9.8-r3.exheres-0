@@ -32,7 +32,7 @@ DEPENDENCIES="
     run:
         dev-lua/luaexpat[>=1.2.0][lua_abis:*(-)?]
         dev-lua/luafilesystem[~>1.0][lua_abis:*(-)?]
-        dev-lua/luasocket[~>2.0.0][lua_abis:*(-)?]
+        dev-lua/luasocket[>2.0.0][lua_abis:*(-)?]
     recommendation:
         dev-lua/luasec[>=0.4.3][lua_abis:*(-)?] [[ description = [ SSL/TLS support  ] ]]
     suggestion:

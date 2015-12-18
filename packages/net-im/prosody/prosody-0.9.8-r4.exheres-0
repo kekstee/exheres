@@ -44,6 +44,9 @@ DEPENDENCIES="
 src_prepare() {
     expatch "${FILES}"/prosody.cfg.lua.dist.patch
 
+    edo sed -i Makefile -i tools/migration/Makefile \
+            -e 's:MAN = $(DESTDIR)$(PREFIX)/share/man:MAN = $(DESTDIR)/usr/share/man:'
+
     default
 }
 

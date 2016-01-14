@@ -1,4 +1,4 @@
-# Copyright 2014 Alexander Scheuermann <alex+exherbo@tnix.de>
+# Copyright 2014-2016 Alexander Scheuermann <alex+exherbo@tnix.de>
 # Distributed under the terms of the GNU General Public License v2
 
 require lua [ multibuild=false whitelist="5.1 5.2 5.3" ]
@@ -13,14 +13,16 @@ DOWNLOADS="http://www.andre-simon.de/zip/${PNV}.tar.bz2"
 LICENCES="GPL-3"
 SLOT="0"
 PLATFORMS="~amd64"
-MYOPTIONS="doc qt4"
+MYOPTIONS="doc qt5"
 
 DEPENDENCIES="
+    build:
+        virtual/pkg-config
+        doc? ( app-doc/doxygen )
     build+run:
         dev-libs/boost
-        dev-util/pkg-config
-        doc? ( app-doc/doxygen )
-        qt4? ( x11-libs/qt:4 )
+        sys-libs/glibc
+        qt5? ( x11-libs/qtbase:5 )
 "
 
 src_prepare() {
@@ -46,7 +48,7 @@ DEFAULT_SRC_INSTALL_PARAMS=(
 src_compile() {
     emake help
     emake cli
-    if optionq qt4; then
+    if optionq qt5; then
         emake gui
     fi
 }
@@ -54,7 +56,7 @@ src_compile() {
 src_install() {
     default
 
-    if optionq qt4; then
+    if optionq qt5; then
         emake -j1 DESTDIR="${IMAGE}" ${DEFAULT_SRC_INSTALL_PARAMS[@]} install-gui
     fi
     if optionq doc; then

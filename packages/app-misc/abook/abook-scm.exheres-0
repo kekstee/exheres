@@ -4,7 +4,7 @@
 SCM_REPOSITORY="http://git.code.sf.net/p/abook/git"
 SCM_CHECKOUT_TO="abook"
 
-require scm-git autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
+require scm-git autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 
 SUMMARY="Text-based addressbook program designed to use with mutt mail client"
 HOMEPAGE="http://abook.sourceforge.net/"
@@ -16,6 +16,7 @@ MYOPTIONS=""
 
 DEPENDENCIES="
     build+run:
+        sys-libs/glibc
         sys-libs/ncurses
         sys-libs/readline
     suggestion:
@@ -24,3 +25,8 @@ DEPENDENCIES="
 
 AT_M4DIR=( m4 )
 
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --with-curses
+    --with-readline
+    CFLAGS="${CFLAGS} -std=gnu89"
+)

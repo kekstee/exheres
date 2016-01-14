@@ -1,11 +1,8 @@
 # Copyright 2014-2016 Alexander Scheuermann <alex+exherbo@tnix.de>
 # Distributed under the terms of the GNU General Public License v2
 
-SCM_REPOSITORY="http://git.code.sf.net/p/abook/git"
-SCM_CHECKOUT_TO="abook"
-
 require abook
-require scm-git
 
+DOWNLOADS="${HOMEPAGE}/devel/${PNV}.tar.gz"
 PLATFORMS="~amd64"
 

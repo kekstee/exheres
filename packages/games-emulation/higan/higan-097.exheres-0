@@ -1,20 +1,21 @@
-# Copyright 2014 Alexander Scheuermann <alex+exherbo@tnix.de>
+# Copyright 2014-2016 Alexander Scheuermann <alex+exherbo@tnix.de>
 # Distributed under the terms of the GNU General Public License v2
 
 MY_PNV="${PN}_v${PV}-source"
 
-SUMMARY="Nintendo multi-system emulator, formerly called bsnes"
-DESCRIPTION="Cycle accurate Super Nintendo emulator. It also supports Nintendo, Game Boy, Game Boy
-Color and Game Boy Advance. OpenGL 3.2 is required.
-"
-HOMEPAGE="http://byuu.org/emulation/${PN}/"
-DOWNLOADS="http://files.byuu.org/download/${MY_PNV}.tar.xz"
+SUMMARY="higan is a Nintendo multi-system emulator."
+DESCRIPTION="Emulator aiming for perfect accuracy on the systems Famicom, Super Famicom, Game Boy,
+Game Boy Color, Game Boy Advance and the subsystems Super Game Boy, BS-X Satellaview and Sufami
+Turbo. OpenGL 3.2 is required."
 
+HOMEPAGE="http://byuu.org/emulation/${PN}/"
+DOWNLOADS="http://download.byuu.org/${MY_PNV}.7z"
 LICENCES="GPL-3"
 SLOT="0"
 PLATFORMS="~amd64"
 MYOPTIONS="
     opengl
+    openmp
     sdl
     xv
     (
@@ -27,7 +28,7 @@ MYOPTIONS="
         number-selected = at-least-one
     ]]
     (
-        gtk
+        gtk2
         qt4
     ) [[
         number-selected = exactly-one
@@ -39,7 +40,7 @@ MYOPTIONS="
     ) [[
         number-selected = at-least-one
     ]]
-    profile_accuracy [[ description = [ Allow mid scanline hacks, slow ] ]]
+    profile_accuracy [[ description = [ Allow mid scanline hacks, slower ] ]]
     profile_balanced [[ description = [ Recommended, conforms to SNES standard ] ]]
     profile_performance [[ description = [ For weaker hardware ] ]]
 "
@@ -52,24 +53,39 @@ DEPENDENCIES="
         x11-libs/libXext
         alsa? ( sys-sound/alsa-lib )
         ao? ( media-libs/libao )
+        gtk2? (
+            dev-libs/atk
+            dev-libs/glib
+            gnome-desktop/gtksourceview:2
+            media-libs/fontconfig
+            media-libs/freetype:2
+            x11-libs/cairo
+            x11-libs/gdk-pixbuf:2.0
+            x11-libs/gtk+:2
+            x11-libs/pango
+        )
         openal? ( media-libs/openal )
         opengl? ( x11-dri/mesa[X] )
+        openmp? ( sys-libs/libgomp:= )
+        oss? ( sys-sound/oss )
         pulseaudio? ( media-sound/pulseaudio )
         sdl? ( media-libs/SDL )
-        oss? ( sys-sound/oss )
-        xv? ( x11-libs/libXv )
-        gtk? ( x11-libs/gtk+:2 )
         qt4? ( x11-libs/qt:4 )
+        xv? ( x11-libs/libXv )
 "
 
 WORK="${WORKBASE}/${MY_PNV}"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}/hiro_GNUmakefile.patch"
+)
 
 RESTRICT=test
 
 higan_disable() {
     edo sed -i \
         -e "s/${1}//" \
-        "${WORK}/target-ethos/Makefile"
+        "${WORK}/higan/target-tomoko/GNUmakefile"
 }
 
 # support multiple profiles
@@ -78,17 +94,24 @@ higan_profiles=( accuracy balanced performance )
 src_prepare() {
     # use system flags
     edo sed -i \
-        -e "/flags   += -I. -O3 -fomit-frame-pointer/ s/-O3 -fomit-frame-pointer/${CXXFLAGS}/" \
-        -e "/  flags += -march=native/d" \
-        -e "/link    +=/ s/$/ ${LDFLAGS}/" \
-        Makefile
+        -e "/flags += -I. -I.. -O3/ s/-O3/${CXXFLAGS}/" \
+        -e "/  flags += -march=native/ s/-march=native //" \
+        -e "/  link += -fopenmp/ s/$/ ${LDFLAGS}/" \
+        higan/GNUmakefile
     edo sed -i \
-        -e "/flags := \$(flags) -O3 -fomit-frame-pointer -I../ s/-O3 -fomit-frame-pointer/${CXXFLAGS}/" \
-        ananke/Makefile
+        -e "/flags += -I.. -O3/ s/-O3/${CXXFLAGS}/" \
+        icarus/GNUmakefile
     # set pkg-config
     edo sed -i \
         -e "s/pkg-config/${PKG_CONFIG}/" \
-        phoenix/Makefile
+        hiro/GNUmakefile
+
+    # optionally disable openmp
+    optionq openmp || {
+        edo sed -i \
+            -e "s/-fopenmp//" \
+            higan/GNUmakefile
+    }
 
     # apply options
     # audio
@@ -110,59 +133,60 @@ src_prepare() {
 
 src_compile() {
     # support multiple profiles
+    edo pushd higan
     for profile in ${higan_profiles[@]}; do
         if optionq profile_${profile}; then
-            emake clean
             emake \
                 platform="linux" \
                 compiler="${CXX}" \
-                cflags="-x c -std=c99" \
-                cppflags="-x c++ -std=c++11" \
                 profile="${profile}" \
-                phoenix="$(option qt4 qt gtk)"
+                hiro="$(option qt4 qt gtk)"
             edo mv out/higan out/higan-${profile}
         fi
     done
+    edo popd
 
-    # rom loader library
-    edo cd ananke
+    # library management
+    edo pushd icarus
     emake \
         platform="linux" \
         compiler="${CXX}" \
-        cppflags="-x c++ -std=c++11"
+        hiro="$(option qt4 qt gtk)"
+    edo popd
 }
 
 src_install() {
-    dobin out/higan-*
+    dobin higan/out/higan-*
+    dobin icarus/out/icarus
 
     insinto /usr/share/pixmaps
-    doins data/higan.png
+    doins higan/data/higan.png
 
     insinto /usr/share/applications
     # support multiple profiles
     for profile in ${higan_profiles[@]}; do
         if optionq profile_${profile}; then
-            edo cp data/higan.desktop data/higan-${profile}.desktop
+            edo cp higan/data/higan.desktop higan/data/higan-${profile}.desktop
             edo sed -i \
                 -e "s/Name=higan/Name=higan-${profile}/" \
                 -e "s/Exec=higan/Exec=higan-${profile}/" \
-                data/higan-${profile}.desktop
-            doins data/higan-${profile}.desktop
+                higan/data/higan-${profile}.desktop
+            doins higan/data/higan-${profile}.desktop
         fi
     done
 
     insinto /usr/share/higan
-    doins -r profile/*
-    doins data/cheats.bml
+    doins -r higan/profile/*
+    doins higan/data/cheats.bml
+}
 
-    # rom loader library
-    dolib.so ananke/libananke.so
-    dosym /usr/$(exhost --target)/lib/libananke.so /usr/$(exhost --target)/lib/libananke.so.1
+pkg_postinst() {
+    default
 
-    # opengl shaders
-    if optionq opengl; then
-        insinto /usr/share/higan/Video\ Shaders
-        doins -r shaders/*.shader
-    fi
+    # library changes in quirky ways from release to release
+    ewarn "WARNING: The library layout has changed."
+    ewarn "${PN} does not know its system wide resources and requires a manual copy per user."
+    ewarn "For the current release the location for this is \"~/.local/${PN}\"."
+    ewarn "Please run: cp -r /usr/share/${PN} ~/.local/"
 }
 

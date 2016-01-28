@@ -1,0 +1,19 @@
+Source: Alexander Scheuermann <alex+exherbo@tnix.de>
+Upstream: No
+Reason: Fix cairo linking for the gtk interface
+--
+diff --git a/hiro/GNUmakefile b/hiro/GNUmakefile
+index ac6f28b..1e2ebbc 100644
+--- a/hiro/GNUmakefile
++++ b/hiro/GNUmakefile
+@@ -36,8 +36,8 @@ ifneq ($(filter $(platform),linux bsd),)
+   endif
+ 
+   ifeq ($(hiro),gtk)
+-    hiroflags = $(cppflags) $(flags) -DHIRO_GTK $(shell pkg-config --cflags gtk+-2.0 gtksourceview-2.0)
+-    hirolink = -lX11 $(shell pkg-config --libs gtk+-2.0 gtksourceview-2.0)
++    hiroflags = $(cppflags) $(flags) -DHIRO_GTK $(shell pkg-config --cflags cairo gtk+-2.0 gtksourceview-2.0)
++    hirolink = -lX11 $(shell pkg-config --libs cairo gtk+-2.0 gtksourceview-2.0)
+   endif
+ 
+   ifeq ($(hiro),qt)

@@ -1,0 +1,28 @@
+Upstream: https://github.com/google/glog/pull/88
+
+From d68736bc1de72b1c718bac429c838da585b1974b Mon Sep 17 00:00:00 2001
+From: Alexander Scheuermann <alex@tnix.de>
+Date: Fri, 4 Mar 2016 08:55:28 +0100
+Subject: [PATCH] Respect configured docdir
+
+Avoid overriding the configured docdir inside the Makefile.
+$(datarootdir)/doc/ may differ from $(prefix)/share/doc/
+---
+ Makefile.am | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index 3756465..c6c6c09 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -40,7 +40,6 @@ gloginclude_HEADERS = src/glog/log_severity.h
+ nodist_gloginclude_HEADERS = src/glog/logging.h src/glog/raw_logging.h src/glog/vlog_is_on.h src/glog/stl_logging.h
+ noinst_HEADERS = src/glog/logging.h.in src/glog/raw_logging.h.in src/glog/vlog_is_on.h.in src/glog/stl_logging.h.in
+ 
+-docdir = $(prefix)/share/doc/$(PACKAGE)-$(VERSION)
+ ## This is for HTML and other documentation you want to install.
+ ## Add your documentation files (in doc/) in addition to these
+ ## top-level boilerplate files.  Also add a TODO file if you have one.
+-- 
+2.7.2
+

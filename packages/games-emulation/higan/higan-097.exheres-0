@@ -47,6 +47,7 @@ MYOPTIONS="
 
 DEPENDENCIES="
     build:
+        app-arch/p7zip
         virtual/pkg-config
     build+run:
         x11-libs/libX11

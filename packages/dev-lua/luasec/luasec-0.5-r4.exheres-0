@@ -28,14 +28,14 @@ DEFAULT_SRC_PREPARE_PATCHES=(
 
 DEFAULT_SRC_COMPILE_PARAMS=(
     linux
-    )
+)
 
 prepare_one_multibuild() {
     default
-    append-flags -I /usr/include/lua$(lua_get_abi)
+    append-flags -I /usr/$(exhost --target)/include/lua$(lua_get_abi)
 
     edo cd src
-    edo lua options.lua -g /usr/include/openssl/ssl.h > options.h
+    edo lua options.lua -g /usr/$(exhost --target)/include/openssl/ssl.h > options.h
 }
 
 compile_one_multibuild() {

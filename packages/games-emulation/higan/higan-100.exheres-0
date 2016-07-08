@@ -43,6 +43,7 @@ MYOPTIONS="
     profile_accuracy [[ description = [ Allow mid scanline hacks, slower ] ]]
     profile_balanced [[ description = [ Recommended, conforms to SNES standard ] ]]
     profile_performance [[ description = [ For weaker hardware ] ]]
+    ( providers: eudev systemd ) [[ number-selected = exactly-one ]]
 "
 
 DEPENDENCIES="
@@ -73,6 +74,8 @@ DEPENDENCIES="
         sdl? ( media-libs/SDL )
         qt4? ( x11-libs/qt:4 )
         xv? ( x11-libs/libXv )
+        providers:eudev? ( sys-apps/eudev )
+        providers:systemd? ( sys-apps/systemd )
 "
 
 WORK="${WORKBASE}/${MY_PNV}"
@@ -88,9 +91,6 @@ higan_disable() {
         -e "s/${1}//" \
         "${WORK}/higan/target-tomoko/GNUmakefile"
 }
-
-# support multiple profiles
-higan_profiles=( accuracy balanced performance )
 
 src_prepare() {
     # use system flags
@@ -133,18 +133,12 @@ src_prepare() {
 }
 
 src_compile() {
-    # support multiple profiles
+    # main program
     edo pushd higan
-    for profile in ${higan_profiles[@]}; do
-        if optionq profile_${profile}; then
-            emake \
-                platform="linux" \
-                compiler="${CXX}" \
-                profile="${profile}" \
-                hiro="$(option qt4 qt gtk)"
-            edo mv out/higan out/higan-${profile}
-        fi
-    done
+    emake \
+        platform="linux" \
+        compiler="${CXX}" \
+        hiro="$(option qt4 qt gtk)"
     edo popd
 
     # library management
@@ -157,27 +151,17 @@ src_compile() {
 }
 
 src_install() {
-    dobin higan/out/higan-*
+    dobin higan/out/higan
     dobin icarus/out/icarus
 
     insinto /usr/share/pixmaps
     doins higan/data/higan.png
 
     insinto /usr/share/applications
-    # support multiple profiles
-    for profile in ${higan_profiles[@]}; do
-        if optionq profile_${profile}; then
-            edo cp higan/data/higan.desktop higan/data/higan-${profile}.desktop
-            edo sed -i \
-                -e "s/Name=higan/Name=higan-${profile}/" \
-                -e "s/Exec=higan/Exec=higan-${profile}/" \
-                higan/data/higan-${profile}.desktop
-            doins higan/data/higan-${profile}.desktop
-        fi
-    done
+    doins higan/data/higan.desktop
 
     insinto /usr/share/higan
-    doins -r higan/profile/*
+    doins -r higan/systems/*
     doins higan/data/cheats.bml
 }
 
@@ -185,9 +169,8 @@ pkg_postinst() {
     default
 
     # library changes in quirky ways from release to release
-    ewarn "WARNING: The library layout has changed."
     ewarn "${PN} does not know its system wide resources and requires a manual copy per user."
-    ewarn "For the current release the location for this is \"~/.local/${PN}\"."
-    ewarn "Please run: cp -r /usr/share/${PN} ~/.local/"
+    ewarn "For the current release the location for this is \"~/.local/share/${PN}\"."
+    ewarn "Please run: cp -r /usr/share/${PN} ~/.local/share/"
 }
 

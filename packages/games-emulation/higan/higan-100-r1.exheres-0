@@ -33,16 +33,6 @@ MYOPTIONS="
     ) [[
         number-selected = exactly-one
     ]]
-    (
-        profile_accuracy
-        profile_balanced
-        profile_performance
-    ) [[
-        number-selected = at-least-one
-    ]]
-    profile_accuracy [[ description = [ Allow mid scanline hacks, slower ] ]]
-    profile_balanced [[ description = [ Recommended, conforms to SNES standard ] ]]
-    profile_performance [[ description = [ For weaker hardware ] ]]
     ( providers: eudev systemd ) [[ number-selected = exactly-one ]]
 "
 
@@ -170,7 +160,7 @@ pkg_postinst() {
 
     # library changes in quirky ways from release to release
     ewarn "${PN} does not know its system wide resources and requires a manual copy per user."
-    ewarn "For the current release the location for this is \"~/.local/share/${PN}\"."
+    ewarn "With the current release the location is \"~/.local/share/${PN}\"."
     ewarn "Please run: cp -r /usr/share/${PN} ~/.local/share/"
 }
 

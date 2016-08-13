@@ -158,9 +158,8 @@ src_install() {
 pkg_postinst() {
     default
 
-    # library changes in quirky ways from release to release
+    # system data library needs manual user copy
     ewarn "${PN} does not know its system wide resources and requires a manual copy per user."
-    ewarn "With the current release the location is \"~/.local/share/${PN}\"."
     ewarn "Please run: cp -r /usr/share/${PN} ~/.local/share/"
 }
 

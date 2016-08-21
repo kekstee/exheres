@@ -3,7 +3,7 @@
 
 require \
     github [ user=brunoos tag=${PNV} ] \
-    lua [ multiunpack=true whitelist="5.1 5.2" work=${PN}-${PNV} ] \
+    lua [ multiunpack=true whitelist="5.1 5.2 5.3" work=${PN}-${PNV} ] \
     flag-o-matic
 
 SUMMARY="OpenSSL library binding to provide TLS/SSL communication"
@@ -22,8 +22,7 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/libressl-compat.patch
-    "${FILES}"/0001-Do-not-hardcode-ar.patch
+    "${FILES}"/0001-Make-CC-and-LD-configurable.patch
 )
 
 DEFAULT_SRC_COMPILE_PARAMS=(

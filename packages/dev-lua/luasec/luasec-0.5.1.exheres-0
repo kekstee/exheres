@@ -1,0 +1,51 @@
+# Copyright 2014 Alexander Scheuermann <alex+exherbo@tnix.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require \
+    github [ user=brunoos tag=${PNV} ] \
+    lua [ multiunpack=true whitelist="5.1 5.2" work=${PN}-${PNV} ] \
+    flag-o-matic
+
+SUMMARY="OpenSSL library binding to provide TLS/SSL communication"
+HOMEPAGE="https://github.com/brunoos/luasec"
+
+LICENCES="MIT"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS="( providers: libressl openssl ) [[ number-selected = exactly-one ]]"
+
+DEPENDENCIES="
+    build+run:
+        dev-lua/luasocket[lua_abis:*(-)?]
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:openssl? ( dev-libs/openssl )
+"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/libressl-compat.patch
+    "${FILES}"/0001-Do-not-hardcode-ar.patch
+)
+
+DEFAULT_SRC_COMPILE_PARAMS=(
+    linux
+)
+
+prepare_one_multibuild() {
+    default
+    append-flags -I /usr/$(exhost --target)/include/lua$(lua_get_abi)
+
+    edo cd src
+    edo lua options.lua -g /usr/$(exhost --target)/include/openssl/ssl.h > options.h
+}
+
+compile_one_multibuild() {
+    LDFLAGS="$(raw-ldflags)"
+    emake "${DEFAULT_SRC_COMPILE_PARAMS[@]}"
+}
+
+install_one_multibuild() {
+    emake install LUAPATH="${IMAGE}"$(lua_get_sharedir) \
+                  LUACPATH="${IMAGE}"$(lua_get_libdir)
+    emagicdocs
+}
+

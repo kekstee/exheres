@@ -34,7 +34,7 @@ DEPENDENCIES="
         dev-lua/luafilesystem[~>1.0][lua_abis:*(-)?]
         dev-lua/luasocket[>=2.0.0][lua_abis:*(-)?]
     recommendation:
-        dev-lua/luasec[~>0.5][lua_abis:*(-)?] [[ description = [ SSL/TLS support  ] ]]
+        dev-lua/luasec[>=0.5][lua_abis:*(-)?] [[ description = [ SSL/TLS support  ] ]]
     suggestion:
         dev-lua/luadbi[>=0.5][lua_abis:*(-)?] [[ description = [ SQL database support (SQLite3, MySQL, PostgreSQL) ] ]]
         dev-lua/luaevent[>=0.4.3][lua_abis:*(-)?] [[ description = [ Efficiently scaling above hundreds of concurrent connections ] ]]

@@ -1,0 +1,24 @@
+# Copyright 2016 Alexander Scheuermann
+# Distributed under the terms of the GNU General Public License v2
+
+MY_PN=python-${PN}
+MY_PNV=${MY_PN}-${PV}
+
+require pypi [ pn=${MY_PN} pnv=${MY_PNV} ]
+require setup-py [ import=distutils work=${MY_PNV} ]
+
+SUMMARY="This is a python port of libaxolotl-android originally written by Moxie Marlinspike"
+HOMEPAGE="https://github.com/tgalal/${MY_PN}"
+
+LICENCES="GPL-3"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build+run:
+        dev-python/axolotl-curve25519
+        dev-python/protobuf[>=2.6]
+        dev-python/pycrypto
+"
+

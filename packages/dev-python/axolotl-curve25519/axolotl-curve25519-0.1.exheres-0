@@ -1,0 +1,19 @@
+# Copyright 2016 Alexander Scheuermann
+# Distributed under the terms of the GNU General Public License v2
+
+MY_PN=python-${PN}
+MY_PNV=${MY_PN}-${PV}
+
+require pypi [ pn=${MY_PN} pnv=${MY_PNV} ]
+require setup-py [ import=distutils work=${MY_PNV} ]
+
+SUMMARY="Python wrapper for curve25519 library with ed25519 signatures."
+DESCRIPTION="
+The C code was pulled from libaxolotl-android. At the moment this wrapper is meant for use by python-axolotl.
+"
+HOMEPAGE="https://github.com/tgalal/${MY_PN}"
+
+LICENCES="GPL-3"
+SLOT="0"
+PLATFORMS="~amd64"
+

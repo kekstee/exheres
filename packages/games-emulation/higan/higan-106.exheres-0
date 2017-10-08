@@ -152,7 +152,6 @@ src_install() {
 
     insinto /usr/share/higan
     doins -r higan/systems/*
-    doins higan/data/cheats.bml
 }
 
 pkg_postinst() {

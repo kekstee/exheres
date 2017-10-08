@@ -16,7 +16,7 @@ DEPENDENCIES="
         dev-libs/libgcrypt[>=1.5.0]
         dev-libs/libgpg-error
         net-irc/irssi[>=0.8.15]
-        net-libs/libotr[>4.0.0]
+        net-libs/libotr[>4.1.0]
 "
 
 DEFAULT_SRC_INSTALL_PARAMS=( IRSSI_MODULE_DIR=/usr/$(exhost --target)/lib/irssi/modules )

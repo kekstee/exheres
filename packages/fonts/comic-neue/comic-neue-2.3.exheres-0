@@ -18,6 +18,8 @@ DEPENDENCIES="
         app-arch/unzip
 "
 
+WORK=${WORKBASE}
+
 src_install() {
     insinto "/usr/share/fonts/X11/${FONT}/"
     doins "${WORK}"/OTF/*otf

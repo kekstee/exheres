@@ -3,7 +3,7 @@
 
 require \
     systemd-service [ systemd_files=[ prosody.service ] ] \
-    lua [ multibuild=false whitelist="5.1" ]
+    lua [ multibuild=false whitelist="5.1 5.2" ]
 
 SUMMARY="A lua based Jabber/XMPP server"
 HOMEPAGE="https://prosody.im"
@@ -58,14 +58,15 @@ src_configure() {
         --sysconfdir=/etc/prosody
         --datadir=/var/lib/prosody
         --c-compiler="${CC}"
+        --add-cflags="${CFLAGS}"
         --linker="${CC}"
-        --lua-suffix=
+        --add-ldflags="${LDFLAGS}"
+        --lua-suffix="$(lua_get_abi)"
         --with-lua=/usr
         --runwith=lua
         --with-lua-include=/usr/$(exhost --target)/include/lua$(lua_get_abi)
         --with-lua-lib=/usr/$(exhost --target)/lib
         --with-ssl=crypto
-        --require-config
         --no-example-certs
     )
     if option icu; then
@@ -78,11 +79,6 @@ src_configure() {
         )
     fi
     edo ./configure "${args[@]}"
-
-    edo sed -i \
-        -e "s;-fPIC -Wall;-fPIC -Wall ${CFLAGS};"\
-        -e "s;-shared;-shared ${LDFLAGS};"\
-        Makefile
 }
 
 src_install() {

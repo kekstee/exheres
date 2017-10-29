@@ -2,29 +2,25 @@ Source: Alexander Scheuermann <alex+exherbo@tnix.de>
 Upstream: No
 Reason: Add default daemon configuration
 --
---- a/prosody.cfg.lua.dist	2014-04-19 11:33:30.944390558 +0200
-+++ b/prosody.cfg.lua.dist	2014-05-02 17:07:24.460051564 +0200
-@@ -63,7 +63,7 @@ modules_enabled = {
- 		--"http_files"; -- Serve static files from a directory over HTTP
- 
- 	-- Other specific functionality
--		--"posix"; -- POSIX functionality, sends server to background, enables syslog, etc.
-+		"posix"; -- POSIX functionality, sends server to background, enables syslog, etc.
- 		--"groups"; -- Shared roster support
- 		--"announce"; -- Send announcement to all online users
- 		--"welcome"; -- Welcome users who register accounts
-@@ -139,12 +139,19 @@ authentication = "internal_plain"
+--- a/prosody.cfg.lua.dist	2017-10-29 12:55:07.036291903 +0100
++++ b/prosody.cfg.lua.dist	2017-10-29 13:36:37.810509494 +0100
+@@ -161,10 +161,11 @@
  -- Logging configuration
- -- For advanced logging see http://prosody.im/doc/logging
+ -- For advanced logging see https://prosody.im/doc/logging
  log = {
 -	info = "prosody.log"; -- Change 'info' to 'debug' for verbose logging
 -	error = "prosody.err";
--	-- "*syslog"; -- Uncomment this for logging to syslog
 +	-- info = "prosody.log"; -- Change 'info' to 'debug' for verbose logging
 +	-- error = "prosody.err";
-+	"*syslog"; -- Uncomment this for logging to syslog
+ 	-- "*syslog"; -- Uncomment this for logging to syslog
  	-- "*console"; -- Log to the console, useful for debugging with daemonize=false
++	info = "*syslog";
  }
+ 
+ -- Uncomment to enable statistics
+@@ -181,6 +182,13 @@
+ -- Location of directory to find certificates in (relative to main config file):
+ certificates = "certs"
  
 +-- mod_posix configuration
 +-- Provide daemon settings required by the systemd service file.

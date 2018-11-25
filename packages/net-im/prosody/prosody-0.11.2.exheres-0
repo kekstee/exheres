@@ -41,10 +41,13 @@ DEPENDENCIES="
         dev-lua/lua-zlib[lua_abis:*(-)?] [[ description = [ Compressing XMPP streams when mod_compression is enabled ] ]]
 "
 
+# We don't have "busted" (yet)
+RESTRICT="test"
+
 src_prepare() {
     expatch "${FILES}"/prosody.cfg.lua.dist.patch
 
-    edo sed -i Makefile -i tools/migration/Makefile \
+    edo sed -i makefile -i tools/migration/Makefile \
             -e 's:MAN = $(DESTDIR)$(PREFIX)/share/man:MAN = $(DESTDIR)/usr/share/man:'
 
     default

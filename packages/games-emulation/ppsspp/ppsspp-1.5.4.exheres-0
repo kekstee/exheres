@@ -18,7 +18,7 @@ SCM_glslang_REPOSITORY="https://github.com/hrydgard/glslang"
 SCM_lang_REPOSITORY="https://github.com/hrydgard/ppsspp-lang"
 SCM_spirv_REPOSITORY="https://github.com/KhronosGroup/SPIRV-Cross"
 
-require cmake [ api=1 ] scm-git
+require scm-git cmake [ api=2 ]
 
 SUMMARY="A fast and portable PSP emulator"
 
@@ -53,25 +53,25 @@ CMAKE_SRC_CONFIGURE_PARAMS=(
 
 src_install() {
     if optionq qt5; then
-        edo mv ../build/PPSSPPQt ../build/ppsspp
+        edo mv PPSSPPQt ppsspp
 
         insinto /usr/share/icons
-        doins -r icons/hicolor
+        doins -r "${CMAKE_SOURCE}"/icons/hicolor
 
-        edo cp icons/icon-512.svg ../build/ppsspp.svg
+        edo cp "${CMAKE_SOURCE}"/icons/icon-512.svg ppsspp.svg
         insinto /usr/share/icons/hicolor/scalable/apps
-        doins ../build/ppsspp.svg
+        doins ppsspp.svg
 
         insinto /usr/share/applications
         doins "${FILES}"/ppsspp.desktop
     else
-        edo mv ../build/PPSSPPSDL ../build/ppsspp
+        edo mv PPSSPPSDL ppsspp
     fi
 
-    dobin ../build/ppsspp
+    dobin ppsspp
 
-    edo rm -rf ../build/assets/lang/.git
+    edo rm -rf assets/lang/.git
     insinto /usr/share/ppsspp
-    doins -r ../build/assets
+    doins -r assets
 }
 

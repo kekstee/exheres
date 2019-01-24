@@ -42,6 +42,10 @@ DEPENDENCIES="
         qt5? ( x11-libs/qtbase:5 )
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PN}-Fix-build-with-ffmpeg-4.0.patch
+)
+
 CMAKE_SRC_CONFIGURE_OPTIONS=(
     'qt5 USING_QT_UI'
 )

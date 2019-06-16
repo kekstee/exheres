@@ -18,12 +18,8 @@ DEPENDENCIES="
     build+run:
         dev-lua/luasocket[lua_abis:*(-)?]
         providers:libressl? ( dev-libs/libressl:= )
-        providers:openssl? ( dev-libs/openssl )
+        providers:openssl? ( dev-libs/openssl[>=1.0.2] )
 "
-
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/0001-Make-CC-and-LD-configurable.patch
-)
 
 DEFAULT_SRC_COMPILE_PARAMS=(
     linux

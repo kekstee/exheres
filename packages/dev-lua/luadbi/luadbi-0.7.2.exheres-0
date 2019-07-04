@@ -1,9 +1,9 @@
 # Copyright 2016 Niels Ole Salscheider <olesalscheider@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require lua [ multiunpack=true whitelist="5.1 5.2" work="" ] \
+require github [ user='mwild1' tag=v${PV} ] \
         flag-o-matic \
-        googlecode [ project=luadbi suffix=tar.gz pnv=${PN}.${PV} ]
+        lua [ multiunpack=true whitelist="5.1 5.2 5.3" ]
 
 SUMMARY="LuaDBI is a database interface library for Lua."
 
@@ -20,19 +20,19 @@ MYOPTIONS="
 DEPENDENCIES="
     build+run:
         mysql? ( virtual/mysql )
-        postgresql? ( dev-db/postgresql )
+        postgresql? ( dev-db/postgresql:= )
         sqlite? ( dev-db/sqlite:3 )
 "
 
+DEFAULT_SRC_COMPILE_PARAMS=(
+    CC=$(exhost --tool-prefix)cc
+    AR=$(exhost --tool-prefix)ar
+    RANLIB=$(exhost --tool-prefix)ranlib
+    COMMON_LDFLAGS=${LDFLAGS}
+)
+
 prepare_one_multibuild() {
     default
-
-    sed -e '/^CC/d' \
-        -e '/^CFLAGS/d' \
-        -e '/^AR/d' \
-        -e '/^RANLIB/d' \
-        -e 's/COMMON_LDFLAGS=/COMMON_LDFLAGS=$(LDFLAGS)/' \
-        -i Makefile
 
     append-flags -shared -fpic -I . \
         -I /usr/$(exhost --target)/include/lua$(lua_get_abi) \
@@ -44,18 +44,18 @@ prepare_one_multibuild() {
 
 compile_one_multibuild() {
     if option mysql ; then
-        emake mysql
+        emake mysql "${DEFAULT_SRC_COMPILE_PARAMS[@]}"
     fi
     if option postgresql ; then
-        emake psql
+        emake psql "${DEFAULT_SRC_COMPILE_PARAMS[@]}"
     fi
     if option sqlite ; then
-        emake sqlite3
+        emake sqlite3 "${DEFAULT_SRC_COMPILE_PARAMS[@]}"
     fi
 }
 
 install_one_multibuild() {
-    lua_install_cmodule *.so
+    lua_install_cmodule dbd/*.so
     lua_install_module DBI.lua
     emagicdocs
 }

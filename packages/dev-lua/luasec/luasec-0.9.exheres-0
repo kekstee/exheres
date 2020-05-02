@@ -2,8 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require \
-    github [ user=brunoos tag=${PNV} ] \
-    lua [ multiunpack=true whitelist="5.1 5.2 5.3" work=${PN}-${PNV} ] \
+    github [ user=brunoos tag=v${PV} ] \
+    lua [ multiunpack=true whitelist="5.1 5.2 5.3" ] \
     flag-o-matic
 
 SUMMARY="OpenSSL library binding to provide TLS/SSL communication"
@@ -30,11 +30,10 @@ prepare_one_multibuild() {
     append-flags -I /usr/$(exhost --target)/include/lua$(lua_get_abi)
 
     edo cd src
-    edo lua options.lua -g /usr/$(exhost --target)/include/openssl/ssl.h > options.h
+    edo lua options.lua -g /usr/$(exhost --target)/include/openssl/ssl.h > options.c
 }
 
 compile_one_multibuild() {
-    LDFLAGS="$(raw-ldflags)"
     emake "${DEFAULT_SRC_COMPILE_PARAMS[@]}"
 }
 

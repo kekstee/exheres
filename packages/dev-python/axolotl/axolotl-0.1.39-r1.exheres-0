@@ -19,6 +19,6 @@ DEPENDENCIES="
     build+run:
         dev-python/axolotl-curve25519
         dev-python/protobuf[>=2.6]
-        dev-python/pycrypto
+        dev-python/pycryptodome
 "
 

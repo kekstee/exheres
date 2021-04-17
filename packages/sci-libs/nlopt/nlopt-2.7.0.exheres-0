@@ -1,0 +1,51 @@
+# Copyright 2015 Alexander Scheuermann <alex+exherbo@tnix.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require github [ user=stevengj tag=v${PV} ] cmake
+require python [ blacklist=none has_lib=true multibuild=false with_opt=true ]
+
+SUMMARY="NLopt is a free/open-source library for nonlinear optimization"
+DESCRIPTION="Providing a common interface for a number of different free
+optimization routines available online as well as original implementations of
+various other algorithms."
+
+LICENCES="LGPL-2"
+UPSTREAM_DOCUMENTATION="https://nlopt.readthedocs.io/en/latest/"
+
+SLOT="0"
+PLATFORMS="~amd64"
+
+MYOPTIONS="guile octave"
+
+DEPENDENCIES="
+    build+run:
+        guile? (
+            dev-lang/guile:=
+            dev-lang/swig
+        )
+        octave? ( sci-apps/octave )
+        python? ( dev-lang/swig )
+"
+
+for abi in ${PYTHON_FILTERED_ABIS};  do
+    DEPENDENCIES+="python? ( python_abis:${abi}? ( dev-python/numpy:$(numpy_slot ${abi})[python_abis:${abi}] ) ) "
+done
+
+
+CMAKE_SRC_CONFIGURE_PARAMS=(
+    -DBUILD_SHARED_LIBS:BOOL=TRUE
+    -DNLOPT_CXX:BOOL=FALSE
+    -DNLOPT_FORTRAN:BOOL=FALSE
+    -DNLOPT_MATLAB:BOOL=FALSE
+    -DPYTHON_EXECUTABLE=${PYTHON}
+)
+
+CMAKE_SRC_CONFIGURE_OPTIONS=(
+    'guile NLOPT_GUILE'
+    'octave NLOPT_OCTAVE'
+    'python NLOPT_PYTHON'
+)
+CMAKE_SRC_CONFIGURE_TESTS=(
+    '-DNLOPT_TESTS:BOOL=TRUE -DNLOPT_TESTS:BOOL=FALSE'
+)
+

@@ -2,9 +2,9 @@ Source: Alexander Scheuermann <alex+exherbo@tnix.de>
 Upstream: No
 Reason: Add default daemon configuration
 --
---- a/prosody.cfg.lua.dist	2017-10-29 12:55:07.036291903 +0100
-+++ b/prosody.cfg.lua.dist	2017-10-29 13:36:37.810509494 +0100
-@@ -161,10 +161,11 @@
+--- a/prosody.cfg.lua.dist      2022-06-07 15:13:11.489020011 +0200
++++ b/prosody.cfg.lua.dist      2022-06-07 15:14:48.644629188 +0200
+@@ -183,10 +183,11 @@
  -- Logging configuration
  -- For advanced logging see https://prosody.im/doc/logging
  log = {
@@ -13,12 +13,12 @@ Reason: Add default daemon configuration
 +	-- info = "prosody.log"; -- Change 'info' to 'debug' for verbose logging
 +	-- error = "prosody.err";
  	-- "*syslog"; -- Uncomment this for logging to syslog
- 	-- "*console"; -- Log to the console, useful for debugging with daemonize=false
+ 	-- "*console"; -- Log to the console, useful for debugging when running in the foreground
 +	info = "*syslog";
  }
  
- -- Uncomment to enable statistics
-@@ -181,6 +182,13 @@
+ 
+@@ -205,6 +206,13 @@
  -- Location of directory to find certificates in (relative to main config file):
  certificates = "certs"
  

@@ -19,10 +19,15 @@ MYOPTIONS="openmp"
 
 DEPENDENCIES="
     build+run:
-        sys-libs/glibc
+        openmp?     ( sys-libs/openmp )
 "
 
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
     openmp
+)
+
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --with-blas=no
+    --with-lapack=no
 )
 

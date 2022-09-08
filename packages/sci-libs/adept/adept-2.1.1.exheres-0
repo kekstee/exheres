@@ -15,14 +15,38 @@ LICENCES="Apache-2.0"
 SLOT="0"
 PLATFORMS="~amd64"
 
-MYOPTIONS="openmp"
+MYOPTIONS="
+    blas
+    lapack
+    openmp
+
+    lapack [[ requires = blas ]]
+    openmp? (
+        ( providers:
+            clang
+            gcc
+        ) [[
+            *description = [ Make sure your current compiler is selected as openmp provider ]
+            number-selected = exactly-one
+        ]]
+    )
+"
 
 DEPENDENCIES="
-    build+run:
-        sys-libs/glibc
+    blas? ( virtual/blas )
+    lapack? ( virtual/lapack )
+    openmp? (
+        providers:clang? ( sys-libs/openmp )
+        providers:gcc? ( sys-libs/libgomp )
+    )
 "
 
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
     openmp
+)
+
+DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
+    blas
+    lapack
 )
 

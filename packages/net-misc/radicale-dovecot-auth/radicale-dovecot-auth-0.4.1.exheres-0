@@ -1,0 +1,18 @@
+# Copyright 2022 Alexander Scheuermann <alex+exherbo@tnix.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require setup-py [ blacklist="2" multibuild=false ]
+require github [ tag=v${PV} user='Arvedui' ]
+
+SUMMARY="Dovecot authentication plugin for Radicale
+
+LICENCES="GPL-3"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build+run:
+        net-misc/Radicale[python_abis:*(-)?]
+"
+

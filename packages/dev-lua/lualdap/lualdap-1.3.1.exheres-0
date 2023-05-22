@@ -1,0 +1,51 @@
+# Copyright 2023 Ole Salscheider <ole@salscheider.org>
+# Distributed under the terms of the GNU General Public License v2
+
+require \
+    github [ user=lualdap tag=v${PV} ] \
+    lua [ multiunpack=true whitelist="5.1 5.2 5.3" ] \
+    flag-o-matic
+
+SUMMARY="LuaLDAP is a simple interface from Lua to an LDAP client"
+HOMEPAGE="https://github.com/lualdap/lualdap"
+
+LICENCES="MIT"
+SLOT="0"
+PLATFORMS="~amd64"
+
+DEPENDENCIES="
+    build+run:
+        net-directory/openldap
+"
+
+# The tests require "busted" which is unpackaged
+RESTRICT="test"
+
+prepare_one_multibuild() {
+    default
+    edo cat > "config" <<- EOF
+LUA := lua
+LUA_VERSION := $(lua_get_abi)
+LUA_LIB = 
+LUA_LIBDIR = /usr/$(exhost --target)/lib/
+LUA_INCDIR = /usr/$(exhost --target)/include/lua$(lua_get_abi)
+
+INST_PREFIX = /usr
+INST_BINDIR = /usr/$(exhost --target)/bin
+INST_LIBDIR = /usr/$(exhost --target)/lib/lua/$(lua_get_abi)
+INST_LUADIR = /usr/share/lua$(lua_get_abi)
+
+LDAP_LIB = -lldap
+LDAP_LIBDIR = /usr/$(exhost --target)/lib
+LDAP_INCDIR = /usr/$(exhost --target)/include
+
+LBER_LIB = -llber
+LBER_LIBDIR = /usr/$(exhost --target)/lib
+LBER_INCDIR = /usr/$(exhost --target)/include
+
+LIBFLAG = -shared
+CC= $(exhost --tool-prefix)cc
+INSTALL= install
+EOF
+}
+

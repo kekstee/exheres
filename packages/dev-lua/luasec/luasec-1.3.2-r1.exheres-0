@@ -3,7 +3,7 @@
 
 require \
     github [ user=brunoos tag=v${PV} ] \
-    lua [ multiunpack=true whitelist="5.1 5.2 5.3" ] \
+    lua [ multiunpack=true whitelist="5.1 5.2 5.3 5.4" ] \
     flag-o-matic
 
 SUMMARY="OpenSSL library binding to provide TLS/SSL communication"

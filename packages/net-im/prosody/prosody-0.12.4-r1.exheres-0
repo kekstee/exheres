@@ -3,7 +3,7 @@
 
 require \
     systemd-service [ systemd_files=[ prosody.service ] ] \
-    lua [ multibuild=false whitelist="5.1 5.2" ]
+    lua [ multibuild=false whitelist="5.1 5.2 5.3 5.4" ]
 
 SUMMARY="A lua based Jabber/XMPP server"
 HOMEPAGE="https://prosody.im"
@@ -25,20 +25,18 @@ DEPENDENCIES="
     build+run:
         user/prosody
         group/prosody
-        icu? ( dev-libs/icu )
+        icu? ( dev-libs/icu:= )
         !icu? ( net-dns/libidn )
         providers:libressl? ( dev-libs/libressl:= )
         providers:openssl? ( dev-libs/openssl:= )
     run:
         dev-lua/luaexpat[>=1.3.0][lua_abis:*(-)?]
         dev-lua/luafilesystem[~>1.0][lua_abis:*(-)?]
-        dev-lua/luasocket[>=2.0.0][lua_abis:*(-)?]
-    recommendation:
-        dev-lua/luasec[>=0.5][lua_abis:*(-)?] [[ description = [ SSL/TLS support  ] ]]
+        dev-lua/luasec[>=0.7][lua_abis:*(-)?]
+        dev-lua/luasocket[>=3.0.0][lua_abis:*(-)?]
     suggestion:
-        dev-lua/luadbi[>=0.5][lua_abis:*(-)?] [[ description = [ SQL database support (SQLite3, MySQL, PostgreSQL) ] ]]
-        dev-lua/luaevent[>=0.4.3][lua_abis:*(-)?] [[ description = [ Efficiently scaling above hundreds of concurrent connections ] ]]
-        dev-lua/lua-zlib[lua_abis:*(-)?] [[ description = [ Compressing XMPP streams when mod_compression is enabled ] ]]
+        dev-lua/lualdap[lua_abis:*(-)?] [[ description = [ LDAP authentication ] ]]
+        dev-lua/luadbi[>=0.6][lua_abis:*(-)?] [[ description = [ SQL database support (SQLite3, MySQL, PostgreSQL) ] ]]
 "
 
 # We don't have "busted" (yet)

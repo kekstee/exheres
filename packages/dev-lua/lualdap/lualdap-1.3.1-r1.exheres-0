@@ -3,7 +3,7 @@
 
 require \
     github [ user=lualdap tag=v${PV} ] \
-    lua [ multiunpack=true whitelist="5.1 5.2 5.3" ] \
+    lua [ multiunpack=true whitelist="5.1 5.2 5.3 5.4" ] \
     flag-o-matic
 
 SUMMARY="LuaLDAP is a simple interface from Lua to an LDAP client"

@@ -34,7 +34,7 @@ MYOPTIONS="
 
 DEPENDENCIES="
     blas? ( virtual/blas )
-    lapack? ( virtual/lapack )
+    lapack? ( sci-libs/lapack )
     openmp? (
         providers:clang? ( sys-libs/openmp )
         providers:gcc? ( sys-libs/libgomp )

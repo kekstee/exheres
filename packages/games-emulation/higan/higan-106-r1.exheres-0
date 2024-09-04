@@ -46,7 +46,7 @@ DEPENDENCIES="
         alsa? ( sys-sound/alsa-lib )
         ao? ( media-libs/libao )
         gtk2? (
-            dev-libs/atk
+            dev-libs/at-spi2-core[>=2.52.0]
             dev-libs/glib
             gnome-desktop/gtksourceview:2
             media-libs/fontconfig

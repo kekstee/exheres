@@ -1,0 +1,31 @@
+# Copyright 2016 Alexander Scheuermann <alex+exherbo@tnix.de>
+# Distributed under the terms of the GNU General Public License v2
+
+require cmake github [ user='google' tag=v${PV} ]
+
+SUMMARY="C++ implementation of the Google logging
+module."
+
+LICENCES="BSD-3"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build+run:
+        dev-libs/libunwind
+"
+
+CMAKE_SRC_CONFIGURE_PARAMS=(
+    -DBUILD_SHARED_LIBS:BOOL=TRUE
+    -DPRINT_UNSYMBOLIZED_STACK_TRACES:BOOL=FALSE
+    -DWITH_CUSOM_PREFIX:BOOL=FALSE
+    -DWITH_GFLAGS:BOOL=FALSE
+    -DWITH_GTEST:BOOL=FALSE
+    -DWITH_PKGCONFIG:BOOL=TRUE
+    -DWITH_SYMBOLIZE:BOOL=FALSE
+    -DWITH_THREADS:BOOL=TRUE
+    -DWITH_TLS:BOOL=TRUE
+    -DWITH_UNWIND:BOOL=TRUE
+)
+

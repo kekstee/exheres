@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require github [ user=stevengj tag=v${PV} ] cmake
-require python [ blacklist=none has_lib=true multibuild=false with_opt=true ]
+require python [ blacklist=2 has_lib=true multibuild=false with_opt=true ]
 
 SUMMARY="NLopt is a free/open-source library for nonlinear optimization"
 DESCRIPTION="Providing a common interface for a number of different free
@@ -21,23 +21,22 @@ DEPENDENCIES="
     build+run:
         guile? (
             dev-lang/guile:=
-            dev-lang/swig
+            dev-lang/swig[>=3]
         )
         octave? ( sci-apps/octave )
-        python? ( dev-lang/swig )
+        python? (
+            dev-lang/swig[>=3]
+            dev-python/numpy[python_abis:*(-)?]
+        )
 "
-
-for abi in ${PYTHON_FILTERED_ABIS};  do
-    DEPENDENCIES+="python? ( python_abis:${abi}? ( dev-python/numpy:$(numpy_slot ${abi})[python_abis:${abi}] ) ) "
-done
-
 
 CMAKE_SRC_CONFIGURE_PARAMS=(
     -DBUILD_SHARED_LIBS:BOOL=TRUE
     -DNLOPT_CXX:BOOL=FALSE
     -DNLOPT_FORTRAN:BOOL=FALSE
+    -DNLOPT_LUKSAN:BOOL=TRUE
     -DNLOPT_MATLAB:BOOL=FALSE
-    -DPYTHON_EXECUTABLE=${PYTHON}
+    -DPython_EXECUTABLE=${PYTHON}
 )
 
 CMAKE_SRC_CONFIGURE_OPTIONS=(

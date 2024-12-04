@@ -16,7 +16,15 @@ SLOT="0"
 PLATFORMS="~amd64"
 
 MYOPTIONS="
-    blas
+    blas (
+        ( providers:
+            OpenBLAS
+            blas
+        ) [[
+            *description = [ Basic Linear Algebra Subroutines provider ]
+            number-selected = at-most-one
+        ]]
+    )
     lapack
     openmp
 
@@ -33,7 +41,10 @@ MYOPTIONS="
 "
 
 DEPENDENCIES="
-    blas? ( virtual/blas )
+    blas? (
+        providers:OpenBLAS? ( sci-libs/openBLAS )
+        providers:blas? ( sci-libs/blas )
+    )
     lapack? ( sci-libs/lapack )
     openmp? (
         providers:clang? ( sys-libs/openmp )
